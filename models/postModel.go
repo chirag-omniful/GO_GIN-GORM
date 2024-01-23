@@ -6,8 +6,9 @@ import (
 
 type Post struct {
 	gorm.Model
-	Name string `json:"name"`
-	Body string `json:"body"`
+	Name        string `json:"name"`
+	Age         int    `json:"age"`
+	Description string `json:"description"`
 }
 
 // jo gorm.model likha h us se yeh sab fields add hongi

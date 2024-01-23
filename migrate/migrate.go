@@ -6,11 +6,7 @@ import (
 	"fmt"
 )
 
-func init() {
-	initializers.ConnectDB()
-}
-
-func main() {
+func MigrateDB() {
 	err := initializers.DB.AutoMigrate(&models.Post{})
 	if err != nil {
 		fmt.Println("Error in connecting to Database")
