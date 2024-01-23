@@ -32,12 +32,49 @@ func CreateSinglePost(ctx *gin.Context) {
 	})
 }
 
+func CreatePostSelectedFields(ctx *gin.Context) {
+	var user models.Post
+	err := ctx.Bind(&user)
+	if err != nil {
+		fmt.Println("issue in binding the body which comes with the request")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	result := initializers.DB.Select("Name", "Age").Create(&user)
+
+	if result.Error != nil {
+		ctx.Status(400)
+		return
+	}
+
+	ctx.JSON(200, user)
+}
+
+func CreateInbatches(ctx *gin.Context) {
+
+	var users []*models.Post
+	err := ctx.Bind(&users)
+	if err != nil {
+		fmt.Println("issue in binding the body which comes with the request")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	result := initializers.DB.CreateInBatches(users, 2)
+	if result.Error != nil {
+		ctx.Status(400)
+		return
+	}
+
+	ctx.JSON(200, users)
+}
+
 func CreateMultiplePost(ctx *gin.Context) {
 
 	var users []*models.Post
 	err := ctx.Bind(&users)
 	if err != nil {
-		fmt.Println("issue in binding the body which comes with the request, create multiple posts")
+		fmt.Println("issue in binding the body which comes with the request")
 		ctx.JSON(http.StatusBadRequest, err.Error())
 	}
 
