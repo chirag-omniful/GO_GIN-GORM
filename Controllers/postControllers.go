@@ -5,19 +5,22 @@ import (
 	"Learn/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-func CreatePost(ctx *gin.Context) {
+func CreateSinglePost(ctx *gin.Context) {
 
 	var user models.Post
-
 	err := ctx.Bind(&user) // should bind json bhi use kr skte hai
 	if err != nil {
 		fmt.Println("issue in binding the body which comes with the request")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+		return
 	}
 
-	post := models.Post{Name: user.Name, Age: user.Age, Description: user.Description}
-	result := initializers.DB.Create(&post)
+	result := initializers.DB.Create(&user)
+	//test := result.RowsAffected
+	//fmt.Println(test)
 
 	if result.Error != nil {
 		ctx.Status(400)
@@ -25,8 +28,29 @@ func CreatePost(ctx *gin.Context) {
 	}
 
 	ctx.JSON(200, gin.H{
-		"post": post,
+		"post": user,
 	})
+}
+
+func CreateMultiplePost(ctx *gin.Context) {
+
+	var users []*models.Post
+	err := ctx.Bind(&users)
+	if err != nil {
+		fmt.Println("issue in binding the body which comes with the request, create multiple posts")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	result := initializers.DB.Create(users)
+	if result.Error != nil {
+		ctx.Status(400)
+		return
+	}
+
+	ctx.JSON(200, gin.H{
+		"post": users,
+	})
+
 }
 
 func GetAllPosts(ctx *gin.Context) {
@@ -55,6 +79,7 @@ func UpdatePost(ctx *gin.Context) {
 	err := ctx.Bind(&user)
 	if err != nil {
 		fmt.Println("issue in binding body (update post function)")
+		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
