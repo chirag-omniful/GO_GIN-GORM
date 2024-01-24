@@ -51,7 +51,7 @@ func CreatePostSelectedFields(ctx *gin.Context) {
 	ctx.JSON(200, user)
 }
 
-func CreateInbatches(ctx *gin.Context) {
+func CreateInBatches(ctx *gin.Context) {
 
 	var users []*models.Post
 	err := ctx.Bind(&users)
@@ -67,6 +67,27 @@ func CreateInbatches(ctx *gin.Context) {
 	}
 
 	ctx.JSON(200, users)
+}
+
+func CreateWithMap(ctx *gin.Context) {
+	var user models.Post
+	err := ctx.Bind(&user)
+	if err != nil {
+		fmt.Println("issue in binding the body which comes with the request")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	result := initializers.DB.Model(models.Post{}).Create(map[string]interface{}{
+		"name":        user.Name,
+		"age":         user.Age,
+		"description": user.Description,
+	})
+	if result.Error != nil {
+		ctx.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(200, user)
 }
 
 func CreateMultiplePost(ctx *gin.Context) {

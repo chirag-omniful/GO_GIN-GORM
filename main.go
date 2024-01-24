@@ -20,7 +20,8 @@ func main() {
 
 	r.POST("/post", Controllers.CreateSinglePost)
 	r.POST("/createSelect", Controllers.CreatePostSelectedFields)
-	r.POST("/createInBatches", Controllers.CreateInbatches)
+	r.POST("/createInBatches", Controllers.CreateInBatches)
+	r.POST("/createWithMap", Controllers.CreateWithMap)
 	r.POST("posts", Controllers.CreateMultiplePost)
 	r.GET("/posts", Controllers.GetAllPosts)
 	r.GET("/posts/:id", Controllers.GetSinglePost)
