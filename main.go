@@ -23,9 +23,14 @@ func main() {
 	r.POST("/createInBatches", Controllers.CreateInBatches)
 	r.POST("/createWithMap", Controllers.CreateWithMap)
 	r.POST("posts", Controllers.CreateMultiplePost)
+
 	r.GET("/posts", Controllers.GetAllPosts)
 	r.GET("/posts/:id", Controllers.GetSinglePost)
-	r.PUT("post/:id", Controllers.UpdatePost)
+	r.GET("/lastPost", Controllers.GetLastPost)
+
+	r.PUT("/post/:id", Controllers.UpdatePost)
+	r.PUT("/post", Controllers.UpsertPost)
+
 	r.DELETE("post/:id", Controllers.DeletePost)
 
 	err := r.Run(":8080")

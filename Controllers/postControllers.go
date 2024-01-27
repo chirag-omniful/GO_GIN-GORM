@@ -5,6 +5,8 @@ import (
 	"Learn/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 )
 
@@ -130,6 +132,18 @@ func GetSinglePost(ctx *gin.Context) {
 	})
 }
 
+func GetLastPost(ctx *gin.Context) {
+	var post models.Post
+	result := initializers.DB.Last(&post)
+
+	if result.Error != nil {
+		fmt.Println("Record not found")
+		return
+	}
+
+	ctx.JSON(200, post)
+}
+
 func UpdatePost(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -153,6 +167,33 @@ func UpdatePost(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{
 		"post": post,
 	})
+}
+
+func UpsertPost(ctx *gin.Context) {
+	var req models.Post
+
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		fmt.Println("issue in binding the body which comes with the request")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	result := initializers.DB.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "name"}},
+		DoUpdates: clause.Assignments(map[string]interface{}{
+			"name":        gorm.Expr("EXCLUDED.name"),
+			"age":         gorm.Expr("EXCLUDED.age"),
+			"description": gorm.Expr("EXCLUDED.description"),
+		}),
+	}).Create(&req)
+
+	if result.Error != nil {
+		fmt.Println("cant upsert")
+		return
+	}
+
+	ctx.JSON(200, req)
 }
 
 func DeletePost(ctx *gin.Context) {

@@ -6,8 +6,8 @@ import (
 
 type Post struct {
 	gorm.Model
-	Name        string `gorm:"unique" json:"name"`
-	Age         int    `json:"age"`
+	Name        string `json:"name" gorm:"unique"`
+	Age         int    `json:"age" gorm:"unique"`
 	Description string `json:"description"`
 }
 
