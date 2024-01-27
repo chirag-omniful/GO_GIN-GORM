@@ -115,7 +115,8 @@ func CreateMultiplePost(ctx *gin.Context) {
 
 func GetAllPosts(ctx *gin.Context) {
 	var posts []models.Post
-	initializers.DB.Find(&posts)
+	result := initializers.DB.Find(&posts)
+	fmt.Println(result.RowsAffected)
 
 	ctx.JSON(200, gin.H{
 		"posts": posts,
@@ -142,6 +143,41 @@ func GetLastPost(ctx *gin.Context) {
 	}
 
 	ctx.JSON(200, post)
+}
+
+func GetRowByWhereCondition(ctx *gin.Context) {
+	var req models.Post
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		fmt.Println("issue in binding the body which comes with the request")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	result := initializers.DB.Where("name=?", req.Name).First(&req)
+
+	if result.Error != nil {
+		fmt.Println("error aagya")
+		return
+	}
+
+	ctx.JSON(200, req)
+}
+
+func GetByOrCondition(ctx *gin.Context) {
+	var req models.Post
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		fmt.Println("issue in binding the body which comes with the request")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	result := initializers.DB.Where("name=?", req.Name).Or("age=?", req.Age).Find(&req)
+	if result.Error != nil {
+		fmt.Println("error aagya")
+		return
+	}
+
+	ctx.JSON(200, req)
 }
 
 func UpdatePost(ctx *gin.Context) {

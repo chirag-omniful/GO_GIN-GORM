@@ -27,6 +27,8 @@ func main() {
 	r.GET("/posts", Controllers.GetAllPosts)
 	r.GET("/posts/:id", Controllers.GetSinglePost)
 	r.GET("/lastPost", Controllers.GetLastPost)
+	r.GET("/whereCondition", Controllers.GetRowByWhereCondition)
+	r.GET("/orCondition", Controllers.GetByOrCondition)
 
 	r.PUT("/post/:id", Controllers.UpdatePost)
 	r.PUT("/post", Controllers.UpsertPost)
