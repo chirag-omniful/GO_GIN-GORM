@@ -40,6 +40,7 @@ func main() {
 		fmt.Println("Error in loading server")
 	}
 
-	fmt.Println("lessgoooo yeahhhh")
+	chirag := "qwertyuio"
+	fmt.Println(chirag)
 
 }
