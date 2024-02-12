@@ -4,7 +4,6 @@ import (
 	"Learn/Controllers"
 	"Learn/initializers"
 	"Learn/migrate"
-	"Learn/sqs"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +11,6 @@ import (
 func init() {
 	initializers.ConnectDB()
 	migrate.MigrateDB()
-	sqs.SqsSession()
 }
 
 func main() {
