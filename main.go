@@ -40,4 +40,6 @@ func main() {
 		fmt.Println("Error in loading server")
 	}
 
+	chirag := "aaj dekhte hai"
+	fmt.Println(chirag)
 }
